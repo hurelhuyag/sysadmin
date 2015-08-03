@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+
+sudo sed -i 's/..\.archive\.ubuntu\.com/mirror.datacenter.mn/g' /etc/apt/sources.list
 sudo apt-get update 
 sudo apt-get upgrade
 sudo apt-get install \

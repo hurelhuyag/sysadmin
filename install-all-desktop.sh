@@ -37,3 +37,6 @@ gstreamer1.0-plugins-good \
 gstreamer1.0-pulseaudio \
 gstreamer1.0-tools \
 gstreamer1.0-x
+
+git config --global user.email "hurelhuyag@sodonsolution.com"
+git config --global user.name "Hurelhuyag"
