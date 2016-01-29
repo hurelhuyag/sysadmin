@@ -3,18 +3,24 @@
 ## http://www.severalnines.com/galera-configurator/tmp/qc8je0dss8md7106br5jr8g4g3/s9s-galera-mariadb-2.8.0//mysql/config/my.cnf
 ## http://adesh.me/installing-galera-cluster-with-mariadb-10-1-on-ubuntu-12-04/
 ## http://www.slideshare.net/Severalnines/9-devopstipsforgoingintoprodwithgalera-1
+## https://gist.github.com/kalos/3657441
 ##
 ## copy node1's /etc/mysql/debian.cnf to other nodes
 ## node1: service mysql start --wsrep-new-cluster
 ## node2: service mysql start --wsrepclusteraddress=gcomm://IP1
 
+[mysqld]
+
 server_id = SERVERID
 
 innodb_autoinc_lock_mode = 2
+innodb_locks_unsafe_for_binlog = 1
+
 bind-address		= 0.0.0.0
-binlog_format		= BIN #MIXED mode not supported
+binlog_format		= ROW #MIXED mode not supported
 binlog_row_image	= noblob
 query_cache_type	= 0
+query_cache_size	= 0
 
 memlock			= 0
 sysdate_is_now	= 1
@@ -26,6 +32,7 @@ sysdate_is_now	= 1
 #expire_logs_days			= 7
 #loose_rpl_semi_sync_master_enabled	= 1
 
+#wsrep_auto_increment_control = ON
 wsrep_on				= ON
 wsrep_node_address		= "IP1"
 wsrep_node_name			= "node1"
@@ -42,6 +49,7 @@ wsrep_provider_options	= "evs.keepalive_period=PT3S; evs.inactive_check_period=P
 wsrep_provider_options	= "socket.ssl_cert=galera_rep.crt; socket.ssl_key=galera_rep.key"
 
 wsrep_recover				= ON
+wsrep_retry_autocommit		= 2
 wsrep_sst_method			= xtrabackup-v2
 wsrep_sst_receive_address	= "IP1"
 wsrep_sst_auth				= root:password
@@ -49,4 +57,14 @@ wsrep_slave_threads			= 8
 wsrep_max_ws_rows			= 131072
 wsrep_max_ws_size			= 1G
 wsrep_osu_method			= TOI # RSU
-wsrep_drupal_282555_workaround	= 0
+wsrep_causal_reads			= 0 # enable "strictly synchronous" semantics for read operations
+wsrep_drupal_282555_workaround	= 1 # retry autoinc insert, which failed for duplicate key error
+
+# Command to call when node status or cluster membership changes.
+# Will be passed all or some of the following options:
+# --status  - new status of this node
+# --uuid    - UUID of the cluster
+# --primary - whether the component is primary or not ("yes"/"no")
+# --members - comma-separated list of members
+# --index   - index of this node in the list
+#wsrep_notify_cmd=
