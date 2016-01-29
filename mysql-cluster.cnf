@@ -1,0 +1,52 @@
+##
+## http://www.severalnines.com/galera-configurator/generatescripts
+## http://www.severalnines.com/galera-configurator/tmp/qc8je0dss8md7106br5jr8g4g3/s9s-galera-mariadb-2.8.0//mysql/config/my.cnf
+## http://adesh.me/installing-galera-cluster-with-mariadb-10-1-on-ubuntu-12-04/
+## http://www.slideshare.net/Severalnines/9-devopstipsforgoingintoprodwithgalera-1
+##
+## copy node1's /etc/mysql/debian.cnf to other nodes
+## node1: service mysql start --wsrep-new-cluster
+## node2: service mysql start --wsrepclusteraddress=gcomm://IP1
+
+server_id = SERVERID
+
+innodb_autoinc_lock_mode = 2
+bind-address		= 0.0.0.0
+binlog_format		= BIN #MIXED mode not supported
+binlog_row_image	= noblob
+query_cache_type	= 0
+
+memlock			= 0
+sysdate_is_now	= 1
+
+#gtid_mode					= ON
+#enforce_gtid_consistency	= 1
+#log_bin						= binlog
+#log_slave_updates			= 1
+#expire_logs_days			= 7
+#loose_rpl_semi_sync_master_enabled	= 1
+
+wsrep_on				= ON
+wsrep_node_address		= "IP1"
+wsrep_node_name			= "node1"
+wsrep_cluster_name		= "portalcms"
+wsrep_cluster_address	= "gcomm://IP1,IP2,IP3"
+#wsrep_data_home_dir		=
+wsrep_forced_binlog_format	= 1
+
+wsrep_provider			= /usr/lib/galera/libgalera_smm.so
+wsrep_provider_options	= "gcache.size=2G"
+# if ping +10ms
+wsrep_provider_options	= "evs.keepalive_period=PT3S; evs.inactive_check_period=PT10S; evs.suspect_timeout=PT30S; evs.inactive_timeout=PT1M; evs.install_timeout=PT1M; evs.send_window=1024; evs.user_send_window=512"
+# if network is not safe
+wsrep_provider_options	= "socket.ssl_cert=galera_rep.crt; socket.ssl_key=galera_rep.key"
+
+wsrep_recover				= ON
+wsrep_sst_method			= xtrabackup-v2
+wsrep_sst_receive_address	= "IP1"
+wsrep_sst_auth				= root:password
+wsrep_slave_threads			= 8
+wsrep_max_ws_rows			= 131072
+wsrep_max_ws_size			= 1G
+wsrep_osu_method			= TOI # RSU
+wsrep_drupal_282555_workaround	= 0
