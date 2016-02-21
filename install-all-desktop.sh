@@ -38,5 +38,8 @@ gstreamer1.0-pulseaudio \
 gstreamer1.0-tools \
 gstreamer1.0-x
 
+sudo apt-get install ubuntu-wallpapers-karmic ubuntu-wallpapers-lucid ubuntu-wallpapers-maverick ubuntu-wallpapers-natty ubuntu-wallpapers-oneiric ubuntu-wallpapers-precise ubuntu-wallpapers-quantal ubuntu-wallpapers-raring ubuntu-wallpapers-saucy
+
+
 git config --global user.email "hurelhuyag@sodonsolution.com"
 git config --global user.name "Hurelhuyag"
