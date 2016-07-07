@@ -1,0 +1,72 @@
+# ansible-playbook prepare_server.yml -- limit 10.0.0.1
+
+- hosts: all
+   sudo: true
+   user: hurelhuyag
+   connection: ssh
+
+- command: ntpdate ntp.ubuntu.com
+- user: uid=1001 name=sodon password= system=yes shell=/bin/bash groups=sodon,adm state=present
+- user: uid=1010 name=erka password= system=yes shell=/bin/bash groups=sodon,adm state=present
+- user: uid=1011 name=uuganbat password= system=yes shell=/bin/bash groups=sodon,adm state=present
+- user: uid=1012 name=erdenebayar password= system=yes shell=/bin/bash groups=sodon,adm state=present
+- user: uid=1012 name=zulaa password= system=yes shell=/bin/bash groups=sodon,adm state=present
+- user: uid=1013 name=boloroo password= system=yes shell=/bin/bash groups=sodon,adm state=present
+- user: uid=1014 name=sambuu password= system=yes shell=/bin/bash groups=sodon,adm state=present
+- user: uid=1015 name=purevee password= system=yes shell=/bin/bash groups=sodon,adm state=present
+- user: uid=1016 name=purevee password= system=yes shell=/bin/bash groups=sodon,adm state=present
+
+- name: Start openssl for generate dhparam.pem
+- command: screen -t "autotest" 2 bash -c 'openssl dhparam -out /etc/ssl/dhparam.pem 4096 ; autotest'
+- command: ln -s /var/lib/lxd /tomcat/lxd
+- command: ln -s /tomcat ~/tomcat
+- command: sed -i 's/..\.archive\.ubuntu\.com/mirror.sodonsolution.com/g' /etc/apt/sources.list
+
+- name: Install required packages
+apt_repository: repo='deb http://ams2.mirrors.digitalocean.com/mariadb/repo/10.1/ubuntu {{ansible_distribution_release}} main' state=present
+apt: update_cache=yes upgrade=dist
+apt: name={{item}} state=present
+with_items:
+  - nginx-full
+  - openjdk-8-jdk
+  - tomcat8
+  - imagemagick
+  - graphicsmagick
+  - mariadb-server
+  - fail2ban
+  - lxd
+  - zfsutils-linux
+  - htop
+  - iotop
+  - nmap
+  - nload
+  - ethtool
+  - letsencrypt
+  - p7zip-full
+
+  - fetch: src=https://raw.githubusercontent.com/hurelhuyag/sysadmin/master/mysql.cnf dest=/etc/mysql/conf.d/sodon.cnf
+  - fetch: src=https://raw.githubusercontent.com/hurelhuyag/sysadmin/master/nginx.conf dest=/etc/nginx/conf.d/sodon.conf
+  #- fetch: src=https://raw.githubusercontent.com/hurelhuyag/sysadmin/master/sudoers dest=/etc/sudoers.d/sodon
+  # https://raymii.org/s/tutorials/Ansible_-_Sudo_Safety_and_Sanity_Checks.html
+
+- name: Configure Tomcat
+- xml: file=/etc/tomcat8/server.xml xpath:/Server/Service/Connector/@URIEncoding=UTF-8 ensure=present
+- xml:
+    file=/etc/tomcat8/server.xml
+    xpath:/Server/Service/Engine/Valve/@className="org.apache.catalina.valves.RemoteIpValve" internalProxies="127\.0\.0\.1|0:0:0:0:0:0:0:1|::1" remoteIpHeader="X-Real-IP" proxiesHeader="X-Forwarded-By" protocolHeader="X-Forwarded-Proto"
+- lineinfile:
+    dest=/etc/default/tomcat8
+    regexp='^JAVA_OPTS=(.*)$'
+    replace='\1 -Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms1G -Xmx2G -XX:+UseG1GC -XX:+UseStringDeduplication'
+
+
+- service: name=nginx state=restarted
+- service: name=tomcat8 state=restarted
+- service: name=mysql state=restarted
+
+ufw: direction=in policy=deny
+ufw: direction=out policy=allow
+ufw: rule=allow port=22 proto=tcp
+ufw: rule=allow port=80 proto=tcp
+ufw: rule=allow port=443 proto=tcp
+ufw: state=enabled

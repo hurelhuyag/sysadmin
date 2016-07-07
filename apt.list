@@ -1,0 +1,4 @@
+deb http://mirror.sodonsolution.com/ubuntu xenial main universe restricted multiverse
+deb http://mirror.sodonsolution.com/ubuntu/ xenial-security main multiverse restricted universe
+deb http://mirror.sodonsolution.com/ubuntu xenial-updates main multiverse restricted universe
+deb http://mirror.sodonsolution.com/ubuntu xenial-backports main multiverse restricted universe
