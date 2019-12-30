@@ -38,7 +38,28 @@ gstreamer1.0-pulseaudio \
 gstreamer1.0-tools \
 gstreamer1.0-x
 
-sudo apt-get install ubuntu-wallpapers-karmic ubuntu-wallpapers-lucid ubuntu-wallpapers-maverick ubuntu-wallpapers-natty ubuntu-wallpapers-oneiric ubuntu-wallpapers-precise ubuntu-wallpapers-quantal ubuntu-wallpapers-raring ubuntu-wallpapers-saucy
+wallpapers=(
+  ubuntu-wallpapers-artful 
+  ubuntu-wallpapers-karmic 
+  ubuntu-wallpapers-lucid 
+  ubuntu-wallpapers-maverick 
+  ubuntu-wallpapers-natty 
+  ubuntu-wallpapers-oneiric 
+  ubuntu-wallpapers-precise 
+  ubuntu-wallpapers-quantal 
+  ubuntu-wallpapers-raring 
+  ubuntu-wallpapers-saucy 
+  ubuntu-wallpapers-trusty 
+  ubuntu-wallpapers-utopic 
+  ubuntu-wallpapers-vivid 
+  ubuntu-wallpapers-wily 
+  ubuntu-wallpapers-xenial 
+  ubuntu-wallpapers-yakkety 
+  ubuntu-wallpapers-zesty
+)
+sudo apt-get install -y ${wallpapers[@]} 
+  
+
 
 
 git config --global user.email "hurelhuyag@sodonsolution.com"
