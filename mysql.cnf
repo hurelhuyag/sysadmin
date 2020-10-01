@@ -31,6 +31,7 @@ long_query_time = 1
 log-queries-not-using-indexes
 
 sync_binlog = 0
+skip_name_resolve
 
 default_storage_engine  = InnoDB
 
