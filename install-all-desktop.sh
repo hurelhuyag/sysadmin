@@ -59,8 +59,12 @@ wallpapers=(
 )
 sudo apt-get install -y ${wallpapers[@]} 
   
+## gpg key ref: https://gist.github.com/ankurk91/c4f0e23d76ef868b139f3c28bde057fc
+gpg --gen-key
+gpg --list-secret-keys --keyid-format LONG
+gpg --armor --export <PASTE_LONG_KEY_HERE> > gpg-key.txt
 
-
-
-git config --global user.email "hurelhuyag@sodonsolution.com"
-git config --global user.name "Hurelhuyag"
+git config --global user.email "hurelhuyag@gmail.com"
+git config --global user.name "Khurelkhuyag"
+git config --global user.signingkey <PASTE_LONG_KEY_HERE>
+git config --global commit.gpgsign true
