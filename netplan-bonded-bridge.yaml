@@ -1,0 +1,44 @@
+## https://www.aptgetlife.co.uk/setting-up-a-bond-and-bridge-in-netplan-on-ubuntu-18-04/
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp5s0:
+      addresses: []
+      dhcp4: false
+      dhcp6: false
+      optional: true
+    enp6s0:
+      addresses: []
+      dhcp4: false
+      dhcp6: false
+      optional: true
+    enp7s0:
+      addresses: []
+      dhcp4: false
+      dhcp6: false
+      optional: true
+  bonds:
+    bond0:
+      interfaces:
+        - enp5s0
+        - enp6s0
+        - enp7s0
+      addresses: []
+      optional: true
+      parameters:
+        mode: balance-alb
+  bridges:
+    br0:
+      dhcp4: false
+      addresses:
+        - 10.131.46.150/24
+      gateway4: 10.131.46.150
+      nameservers:
+        addresses:
+          - 8.8.8.8
+          - 1.1.1.1
+      interfaces:
+        - bond0
+      parameters:
+        forward-delay: 0
