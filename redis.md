@@ -11,7 +11,7 @@ sudo apt install redis-server
 
 Нэвтрэх
 ```
-redis-cli -h 192.168.0.12 -a sodonsolution:hello
+redis-cli -h 192.168.0.12 -a mysecurepassword
 ```
 
 Датабааз сонгох
@@ -31,7 +31,7 @@ KEYS 'sdn:ws:**'
 
 Түлхүүрээр утга харах
 ```
-GET siteDomain::example.localhost.sodonsolution.org
+GET tenants::tenant1
 ```
 
 Бүх түлхүүрийг устгах
